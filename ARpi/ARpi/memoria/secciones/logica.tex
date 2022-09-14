@@ -1,0 +1,72 @@
+\section{Implementación de la lógica de juego}
+
+La lógica de nuestro programa es, en esencia, una serie de cubos de Unity cuya posición en el eje Y varía
+descendientemente de forma constante a lo largo de la ejecución; y cuya altura se corresponde con la
+duración de la nota. Su posición en el eje X dependerá de la calibración previamente realizada
+con el modelo 3D del piano, del cual obtiene el cubo su ancho.
+
+\subsection{PianoObject}
+\texttt{PianoObject} es el comportamiento asociado al nodo que contiene el modelo 3D del piano. Está pensada
+como una clase \textit{singleton}, de la cual sólo puede existir una instancia. Sus métodos más relevantes son los siguientes:
+\begin{itemize}
+	\item \texttt{GetChildren(int i)}: este método devuelve un objeto del conjunto del modelo del piano; es decir, 
+	un \texttt{GameObject} que contiene todas las partes que componen una tecla, además del cubo que será la representación
+	gráfica en pantalla de la nota.
+
+	\item \texttt{GetNoteObject(int i)}: devuelve la representación gráfica de la nota. 
+\end{itemize}
+
+\subsection{NoteObject}
+Esta clase se encarga de manejar las colisiones, que usamos para conocer el momento en el que se debe tocar una nota. 
+
+Los Objetos de Unity cuentan con un colisionador por defecto \texttt{BoxCollider}, del cual haremos uso para determinar
+el momento en el que la nota debe de ser tocada, y en tal caso, compararla con la nota esperada. Para implementarlo, hemos indicado
+que la representación gráfica de las notas es un \textit{Trigger}, y además tenemos un plano con una etiqueta específica de colisionador.
+
+Hemos sobrecargado los métodos asociados al colisionador por \textit{Trigger}:
+\begin{itemize}
+	\item \texttt{OnTriggerEnter(Collider other)}: método de evento para cuando entra por primera vez en contacto la nota
+	con el plano colisionador. Activa un atributo privado (\texttt{can\_be\_pressed}).
+	\item \texttt{OnTriggerStay(Collider other)}: mientras esté en contacto con el plano colisionador,
+	llama a la función que compara la nota reconocida y la nota esperada. En
+	caso de coincidir, añade 1 al contador de notas correctas.
+	\item \texttt{OnTriggerExit(Collider other)}: método de evento para cuando la nota abandona el área del colisionador. 
+	Desactiva el atributo privado (\texttt{can\_be\_pressed}) y, si no se ha reconocido ninguna nota, añade un error al contador de fallos.
+\end{itemize}
+
+\subsection{BeatScroller}
+\texttt{BeatScroller} se encarga de la representación gráfica de la canción sobre la pantalla, así como de recorrer la canción.
+Alguna de la información que contiene es:
+\begin{itemize}
+	\item Lista estática con los nombres de las notas existentes 
+	\item Lista contenedora de los \texttt{NoteObject}
+	\item Lista contenedora de las notas de la canción de forma secuencial
+\end{itemize}
+
+Sus métodos más relevantes son:
+\begin{itemize} 
+	\item \texttt{PlaySong(List<Note> notes)}: recibe la lista de objetos de la clase Nota y añade la representación gráfica
+	correspondiente a la lista de \texttt{NoteObject} y los ordena.
+	\item \texttt{AddChildren(string pitch)}: busca en el el \texttt{PianoObject} el objeto cuyo nombre corresponde al indicado.
+	Crea una copia de la representación gráfia de la nota, la activa y la añade a la lista. En caso de recibir como argumento un 
+	silencio, añade una nota de igual manera pero inactiva.
+	\item \texttt{OrderNotes()}: modifica la altura en base a la duración asociada a la Nota, y la posición de forma relativa a la
+	posición de la nota anterior.
+	\item \texttt{CompareNotes()}: si el juego ha empezado, obtiene la información del micrófono tras procesarla como se explica 
+	en la sección 2.2\ref{audio}. De esta información nos interesa el \textit{pitch}, el cual compara con el correspondiente
+	en la lista de nombres, y devuelve si la nota escuchada se corresponde con la nota esperada, con margen de error de un semitono.
+\end{itemize}
+
+\subsection{SongSelector}
+Esta clase se encarga de inicializar la lista de canciones. Obtiene todas las canciones del directorio Music, 
+añade un evento \textit{onClick} desde la lista de botones, el cual
+crea un objeto \texttt{Song}, cuyo funcionamiento describimos a continuación.
+
+\subsubsection{Song}
+Tiene una lista de objetos \texttt{Note}. Su constructor recibe la ruta a un documento XML del cual extraemos la información con 
+funcionalidades de Unity para este tipo de archivo. Por cada nodo que encuentra, crea un objeto Note y lo añade a la lista.
+
+\subsubsection{Note}
+Objeto unitario que compone las canciones. Cuenta con pitch y duration.
+
+\pagebreak

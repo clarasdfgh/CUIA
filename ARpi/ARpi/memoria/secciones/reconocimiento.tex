@@ -1,0 +1,77 @@
+\section{Reconocimiento del piano}
+\subsection{Instalación de Vuforia}\label{vuforia}
+Como hemos mencionado, la herramienta que decidimos usar para la realidad aumentada
+en este proyecto es Vuforia, un software de pago que ofrece licencias gratuitas bajo
+una serie de condiciones:
+\begin{itemize}
+	\item 20 model targets
+	\item 20 area targets
+	\item No superar las 100 imágenes en los servicios en la nube
+\end{itemize}
+
+Para poder usar la versión gratis debemos crearnos una cuenta en el portal de Vuforia
+y crear en el apartado developing una licencia desde \textit{Develop}. Además
+necesitamos importar la biblioteca a Unity, podemos descargarla desde la página oficial
+y un asistente nos indicará los pasos en el entorno de desarrollo de Unity.
+Cuando creemos nuestro primer objeto Vuforia, como \texttt{ARCamera}, podremos
+acceder a su configuración y añadir nuestra licencia. 
+
+\subsection{Algoritmo de reconocimiento}
+El algoritmo de reconocimiento del teclado actúa de esta forma:
+\begin{enumerate}
+	\item Colocar un marcador aproximadamente en el centro del teclado
+	\item Al ser reconocido se mostrará un modelo 3D de un teclado
+	\item Calibraremos el teclado para colocarlo encima del nuestro y ajustarlo a su medida
+	\item Confirmamos que la calibración está hecha y el modelo desaparece de la pantalla
+\end{enumerate}
+De esta forma no tenemos que gestionar muchos marcadores de reducido tamaño y será más
+ eficiente y fácil de reconocer.
+
+\subsubsection{Marcador}
+El marcador es una imagen que se asocia al objeto \texttt{ImageTarget} que nos ofrece Vuforia,
+le debemos asignar el modelo del piano creando un nodo hijo en unity con el. Sin mayor configuración,
+al encender el simulador de programa y enfocar con la cámara se nos muestra el modelo
+justo encima de nuestro marcador.
+
+
+\subsubsection{Cámara}
+Cuando creamos una nueva escena aparece con dos componentes: una cámara y un foco
+de luz; para la realidad aumentada el primero de ellos no nos sirve, y hay que sustituirlo
+por la \texttt{ARCamera} que nos ofrece Vuforia.
+
+Para que use nuestra webcam debemos configurar el \texttt{PlayMode} en la configuración
+del paquete.
+
+Además, especificaremos un poco más el comportamiento del marcador y la \texttt{ARCamera} creando un script 
+asociado a esta última con dos eventos personalizados de Unity que indican qué hará cuando encuente o pierda el marcador.
+Este script es solo una modificación del ejemplo que viene el el pack de realidad aumentada de Vuforia para Unity, cuyo único añadido es 
+mostrar un aviso de recalibración.
+
+\subsubsection{Ajuste del modelo}
+Para ajustar el modelo 3D a nuestro piano real, hemos usado el paquete \texttt{LeanTouch}
+en su versión gratuita de la \textit{Unity Asset Store}. Esto nos proporcionará una
+herramienta para redimensionar y mover el modelo que, aunque esté pensada para pantallas
+táctiles, incluye también una forma de simular la interacción táctil en el ordenador pulsando la tecla \texttt{ctrl izquierdo}.
+
+\section{Reconocimiento del audio}\label{audio}
+\subsection{Captura del micrófono en tiempo real}
+Para la captura, reproducción y análisis en tiempo real del audio, hemos hecho uso de
+las clases \texttt{Microphone} y \texttt{AudioClip} de Unity. Creando una entidad de tipo
+\texttt{AudioSource}, podemos hacer que su contenido sea guardado en un \texttt{AudioClip}, que
+extraemos de un dispositivo \texttt{Microphone}.
+
+\subsection{Procesamiento del audio y notación musical}
+Para el desarrollo de esta funcionalidad, nos hemos apoyado en la biblioteca \\
+\texttt{ExtractDataFromCapturedSoundByMicrophone} (Jorge Gutiérrez Segovia, 2021).
+Cuando extraemos un clip de audio, podemos emplear el método
+\texttt{GetData} de \texttt{AudioClip} para obtener información sobre, entre otras cosas, su frecuencia. La
+información del sonido se reparte en un espectrograma de n elementos con valores
+del 0 al 1, dependiendo de la amplitud relativa a el tramo de la frecuencia
+dado.
+
+Con este espectrograma, podemos extraer la frecuencia máxima relativa en un momento dado, y la
+podemos correlacionar con la frecuencia de una nota musical conocida. La3 tiene una frecuencia de 440Hz,
+y es el estándar de afinación mundial. Usando los 12 semitonos existentes (siete notas musicales separadas
+por dos semitonos, menos Mi-Fa y Si-Do, que se separan por uno solo), podemos calcular la diferencia
+con el La3 y obtener una nota y octava a partir de una frecuencia en herzios. Todo este
+procesamiento lo lleva a cabo la función \texttt{GetSpectrumData} de la biblioteca anteriormente mencionada.

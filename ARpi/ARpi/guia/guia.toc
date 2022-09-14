@@ -1,0 +1,10 @@
+\babel@toc {spanish}{}\relax 
+\babel@toc {spanish}{}\relax 
+\contentsline {chapter}{\numberline {1}Previa ejecución}{2}{chapter.1}%
+\contentsline {section}{\numberline {1.1}Requisitos mínimos}{2}{section.1.1}%
+\contentsline {section}{\numberline {1.2}Requisitos recomendados}{2}{section.1.2}%
+\contentsline {subsubsection}{Montaje}{3}{subsubsection*.2}%
+\contentsline {section}{\numberline {1.3}Importación del proyecto}{3}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Importación de Vuforia}{3}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Importación del proyecto}{3}{subsection.1.3.2}%
+\contentsline {section}{\numberline {1.4}Ejecución y uso}{3}{section.1.4}%

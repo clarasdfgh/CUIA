@@ -1,0 +1,34 @@
+\section{Implementación de los menús}
+La aplicación consta de dos escenas:
+\begin{itemize}
+	\item Menú principal.
+	\begin{itemize}
+	\item Play
+	\item Salir
+	\end{itemize}
+
+	\item Escena de canción.
+	\begin{itemize}
+	\item Calibración 3D
+	\item Selector de canciones
+	\item Juego
+	\item Resultados
+	\item Salida al menú principal
+	\end{itemize}
+\end{itemize}
+El cambio entre escenas se realiza mediante la función \texttt{LoadScene} de la
+clase \texttt{SceneManager} que nos ofrece Unity.
+El script se asocia a un objeto que no se destruye entre escenas, ya que tiene
+la orden \texttt{DontDestroyOnLoad} porque en Unity los objetos se destruyen al cambio
+de escena, si no lo indicamos de forma explícita tendríamos que tener una copia del objeto
+en cada escena o dejaría de funcionar el programa.
+
+La escena para el menú consta de un \texttt{canvas} y varios \texttt{botones} (\textit{Play},
+y \textit{Salir}). En esta versión del programa solo hay dos escenas, la calibración se realiza justo antes
+de escoger la canción que se desea tocar.
+
+\subsection{Escena para tocar}
+Después de confirmar la calibración, se mostrarán 6 botones, cada uno de ellos con la demo de una canción.
+Inmediatamente después comenzará la ejecución del juego.
+
+\pagebreak

@@ -1,0 +1,33 @@
+\section{Lectura de partituras}
+\subsection{MXML}
+MXML es un formato estándar de partitura basado en XML, un lenguaje de marcado. Este formato es reconocido
+por los principales software de edición y lectura de partituras digitales, como son MuseScore, Sibelius, Finale...
+
+Su versatilidad propia de los lenguajes de marcado nos permite añadir una gran variedad de notaciones y adornos. Para este proyecto,
+nos interesa la lectura secuencial de una voz - En versiones más avanzadas del programa, la lectura y representación de una segunda mano 
+sería trivial, con el único detrimento del reconocimiento correcto del sonido en acordes. 
+
+Tenemos la oportunidad de añadir partituras personalizadas con el uso de MXML: a partir de un archivo en este formato, no es 
+difícil la generación de una versión simplificada con los elementos que nos atañen (nota y duración). Conocemos que su generación es 
+implementable mediante scripts de macros en VIM, y de hecho pudimos desarrollar una versión inicial de un script con ayuda de
+nuestro compañero y amigo Atanasio\ref{tacho}.
+
+Nuestras partituras simplificadas XML siguen el siguiente esquema:
+
+\begin{lstlisting}[language=xml]
+    <song>
+        <note>
+            <pitch></pitch>
+            <duration></duration>
+        </note>
+    </song>
+\end{lstlisting} 
+
+En esta versión del programa se incluyen unas demos de varias canciones populares:
+\begin{enumerate} 
+	\item Cantina Band - John Williams (Star Wars)
+    \item The Entertainer - Scott Joplin
+    \item Super Mario Theme - Koji Kondo (Super Mario Bros)
+    \item Megalovania - Toby Fox (Undertale)
+    \item Dirtmouth - Christopher Larkin (Hollow Knight)
+\end{enumerate}
